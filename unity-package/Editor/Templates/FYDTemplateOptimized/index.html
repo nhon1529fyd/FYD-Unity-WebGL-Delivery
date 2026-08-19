@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    >
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#07111f">
+    <title>{{{ PRODUCT_NAME }}}</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="preload" href="TemplateData/Bg1_1.webp" as="image" type="image/webp">
+    <link rel="stylesheet" href="TemplateData/style.css">
+#if SHOW_DIAGNOSTICS
+    <link rel="stylesheet" href="<<<TemplateData/diagnostics.css>>>">
+    <script src="<<<TemplateData/diagnostics.js>>>"></script>
+#endif
+  </head>
+  <body>
+    <div id="fyd-app" data-state="idle">
+      <div id="fyd-background" aria-hidden="true"></div>
+
+      <main id="game-stage" aria-label="{{{ PRODUCT_NAME }}}">
+        <canvas id="unity-canvas" tabindex="-1" aria-label="Khu vực trò chơi"></canvas>
+
+        <section id="html-loading-layer" aria-live="polite" aria-busy="true">
+          <div class="loader-panel">
+            <div class="portal-loader" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <p id="loading-product">{{{ PRODUCT_NAME }}}</p>
+            <p id="loading-status">Đang chuẩn bị thế giới...</p>
+            <div
+              id="unity-progress-track"
+              role="progressbar"
+              aria-label="Tiến trình tải trò chơi"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div id="unity-progress-fill"></div>
+            </div>
+            <p id="loading-percent">0%</p>
+            <p id="loading-tip">Lần mở sau sẽ nhanh hơn nhờ dữ liệu đã được lưu trong trình duyệt.</p>
+            <button id="retry-button" type="button" hidden>Thử lại</button>
+          </div>
+        </section>
+
+        <div id="transition-layer" aria-hidden="true">
+          <div class="transition-core"></div>
+        </div>
+
+        <div id="unity-warning" role="status" aria-live="polite"></div>
+        <div id="google-login-container"></div>
+
+        <button id="fullscreen-button" type="button" aria-label="Toàn màn hình" title="Toàn màn hình">
+          <span aria-hidden="true">⛶</span>
+        </button>
+      </main>
+    </div>
+
+    <script>
+      window.FYD_UNITY_BUILD = {
+        buildUrl: "Build",
+        loaderFilename: "{{{ LOADER_FILENAME }}}",
+        dataFilename: "{{{ DATA_FILENAME }}}",
+        frameworkFilename: "{{{ FRAMEWORK_FILENAME }}}",
+#if USE_THREADS
+        workerFilename: "{{{ WORKER_FILENAME }}}",
+#endif
+#if USE_WASM
+        codeFilename: "{{{ CODE_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsFilename: "{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        autoSyncPersistentDataPath: true
+      };
+    </script>
+    <script src="TemplateData/fyd-template.js"></script>
+  </body>
+</html>

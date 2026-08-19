@@ -1,0 +1,88 @@
+# FYD Unity WebGL — Apache/LiteSpeed
+# File này được tool copy vào cả thư mục ứng dụng và thư mục Build.
+# Unity khuyến nghị bản xử lý file nén phải có tại <Application Folder>/Build/.htaccess.
+
+Options -MultiViews
+DirectoryIndex index.html
+
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType application/wasm .wasm
+
+  # Brotli — Decompression Fallback = Disabled
+  RemoveType .br
+  RemoveLanguage .br
+  AddEncoding br .br
+
+  <FilesMatch "\.js\.br$">
+    ForceType application/javascript
+  </FilesMatch>
+
+  <FilesMatch "\.wasm\.br$">
+    ForceType application/wasm
+  </FilesMatch>
+
+  <FilesMatch "\.(data|symbols\.json)\.br$">
+    ForceType application/octet-stream
+  </FilesMatch>
+
+  # Gzip — giữ sẵn nếu đổi preset nén từ Brotli sang Gzip
+  RemoveType .gz
+  AddEncoding gzip .gz
+
+  <FilesMatch "\.js\.gz$">
+    ForceType application/javascript
+  </FilesMatch>
+
+  <FilesMatch "\.wasm\.gz$">
+    ForceType application/wasm
+  </FilesMatch>
+
+  <FilesMatch "\.data\.gz$">
+    ForceType application/gzip
+  </FilesMatch>
+
+  <FilesMatch "\.symbols\.json\.gz$">
+    ForceType application/octet-stream
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Một số shared hosting nhận AddEncoding không ổn định; ép header lần nữa.
+  <FilesMatch "\.br$">
+    Header set Content-Encoding "br"
+    Header merge Vary "Accept-Encoding"
+  </FilesMatch>
+
+  <FilesMatch "\.gz$">
+    Header set Content-Encoding "gzip"
+    Header merge Vary "Accept-Encoding"
+  </FilesMatch>
+
+  # HTML và Service Worker phải luôn kiểm tra bản mới.
+  <FilesMatch "^(index\.html|ServiceWorker\.js|manifest\.webmanifest)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Template shell nhẹ: cache ngắn và cập nhật nền.
+  <FilesMatch "\.(css|png|webp|ico)$">
+    Header set Cache-Control "public, max-age=86400, stale-while-revalidate=604800"
+  </FilesMatch>
+
+  # Build URL được template gắn ?v=PRODUCT_VERSION.
+  <FilesMatch "\.(loader\.js|framework\.js|data|wasm|symbols\.json)(\.gz|\.br)?$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Nếu bật WebAssembly Threads, có thể cần hai header dưới đây.
+# Chỉ bật sau khi kiểm tra vì COEP có thể chặn tài nguyên bên thứ ba.
+# <IfModule mod_headers.c>
+#   Header always set Cross-Origin-Opener-Policy "same-origin"
+#   Header always set Cross-Origin-Embedder-Policy "require-corp"
+# </IfModule>

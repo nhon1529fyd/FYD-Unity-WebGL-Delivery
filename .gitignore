@@ -1,0 +1,25 @@
+# Local/editor state
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.vs/
+*.user
+*.userprefs
+
+# Unity-generated state if a test project is ever placed here
+Library/
+Temp/
+Logs/
+UserSettings/
+Builds/
+obj/
+bin/
+*.csproj
+*.sln
+*.slnx
+
+# Local credentials and machine-specific settings
+ProjectSettings/FYDUnityPublisherSettings.asset
+*.local.json
+*.secrets.json

@@ -1,0 +1,21 @@
+{
+  "name": "FYD.UnityPublisher.Editor.Tests",
+  "rootNamespace": "FYD.UnityPublisher.Editor.Tests",
+  "references": [
+    "FYD.UnityPublisher.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "noEngineReferences": false
+}
